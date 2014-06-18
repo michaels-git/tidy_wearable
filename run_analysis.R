@@ -7,8 +7,8 @@ fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%2
 download.file(url = fileURL, destfile = filename, method = "wget")
 }
 # extract zip file
-#temp <- tempfile()
-#download.file(url = filename, destfile = temp, method = "wget")
-#data <- read.table(unz(filename, "a1.dat"))
-#unlink(temp)
+if(!file.exists("UCI HAR Dataset")) {
 unzip(filename)
+}
+test_data <- read.table("UCI HAR Dataset/test/X_test.txt", sep="", header=FALSE)
+training_data <- read.table("UCI HAR Dataset/train/X_train.txt", sep="", header=FALSE)
