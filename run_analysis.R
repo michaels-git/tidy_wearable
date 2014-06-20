@@ -10,19 +10,37 @@ download.file(url = fileURL, destfile = filename, method = "wget")
 if(!file.exists("UCI HAR Dataset")) {
 unzip(filename)
 }
-# read in the column names... V1 is just a sequence number, but V2
+# read in the column names for the "featues"... V1 is just a sequence number, but V2
 # has the text of the column names (use those when reading in the
 # data)
-column_names <- read.table("UCI HAR Dataset/features.txt", sep="", header=FALSE)
+feature_names <- read.table("UCI HAR Dataset/features.txt", sep="", header=FALSE)
 # clean up the column names a bit
-column_names$V2 <- gsub("-", "", column_names$V2)
-column_names$V2 <- gsub(",", "", column_names$V2)
-column_names$V2 <- gsub("\\)", "", column_names$V2)
-column_names$V2 <- gsub("\\(", "", column_names$V2)
-test_data <- read.table("UCI HAR Dataset/test/X_test.txt", sep="", header=FALSE, col.names = column_names$V2)
-training_data <- read.table("UCI HAR Dataset/train/X_train.txt", sep="", header=FALSE, col.names = column_names$V2)
+feature_names$V2 <- gsub("-", "", feature_names$V2)
+feature_names$V2 <- gsub(",", "", feature_names$V2)
+feature_names$V2 <- gsub("\\)", "", feature_names$V2)
+feature_names$V2 <- gsub("\\(", "", feature_names$V2)
+# create a vector for all column names (including the subjects and
+# activities)
+column_names <- c("subject", "activity", feature_names$V2)
+# read in measurement data... the data comprises three parts: 1)
+# subjects, 2) activities, 3) measurements
+# 1st get "test" data
+# read in subjects, activities, and measurements into data frames, and
+# then merge them
+test_subjects <- read.table("UCI HAR Dataset/test/subject_test.txt", header=FALSE)
+test_activities <- read.table("UCI HAR Dataset/test/y_test.txt", header=FALSE)
+test_measurements <- read.table("UCI HAR Dataset/test/X_test.txt", sep="", header=FALSE)
+test_data <- cbind(test_subjects, test_activities, test_measurements)
+# now get the "training" data
+# read in subjects, activities, and measurements into data frames, and
+# then merge them
+train_subjects <- read.table("UCI HAR Dataset/train/subject_train.txt", header=FALSE)
+train_activities <- read.table("UCI HAR Dataset/train/y_train.txt", header=FALSE)
+train_measurements <- read.table("UCI HAR Dataset/train/X_train.txt", sep="", header=FALSE)
+train_data <- cbind(train_subjects, train_activities, train_measurements)
 # "merge" the data sets... although the instrutions use the term "merge"
 # I believe what is really intended was to append the two data sets
-combined <- rbind(test_data, training_data)
-sel_column_names <- column_names$V2[grep("mean$|mean[^Freq]|std",column_names$V2)]
+combined <- rbind(test_data, train_data)
+names(combined) <- column_names
+sel_column_names <- column_names[grep("subject|activity|mean$|mean[^Freq]|std",column_names)]
 subset <- combined[, sel_column_names]
