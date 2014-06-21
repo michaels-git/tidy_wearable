@@ -44,3 +44,7 @@ combined <- rbind(test_data, train_data)
 names(combined) <- column_names
 sel_column_names <- column_names[grep("subject|activity|mean$|mean[^Freq]|std",column_names)]
 subset <- combined[, sel_column_names]
+# read in the activity labels merge with data set
+activity_labels <- read.table("UCI HAR Dataset/activity_labels.txt", sep="", header=FALSE, col.names = c("activity_label_id", "activity_label"))
+subset <- merge(activity_labels, subset, by.x = "activity_label_id", by.y = "activity")
+tidy <- aggregate(. ~ activity_label + subject, data=subset, mean)
