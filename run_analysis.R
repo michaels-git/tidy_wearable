@@ -45,6 +45,9 @@ names(combined) <- column_names
 sel_column_names <- column_names[grep("subject|activity|mean$|mean[^Freq]|std",column_names)]
 subset <- combined[, sel_column_names]
 # read in the activity labels merge with data set
-activity_labels <- read.table("UCI HAR Dataset/activity_labels.txt", sep="", header=FALSE, col.names = c("activity_label_id", "activity_label"))
-subset <- merge(activity_labels, subset, by.x = "activity_label_id", by.y = "activity")
-tidy <- aggregate(. ~ activity_label + subject, data=subset, mean)
+activity_labels <- read.table("UCI HAR Dataset/activity_labels.txt", sep="", header=FALSE, col.names = c("activitylabelid", "activitylabel"))
+subset <- merge(activity_labels, subset, by.x = "activitylabelid", by.y = "activity")
+tidy <- aggregate(. ~ activitylabel + subject, data=subset, mean)
+# get rid of the activity label ID to clean up the columns
+tidy$activitylabelid <- NULL
+write.table(x=tidy, file="tidy.csv", sep=",", row.names=FALSE, quote=FALSE)
