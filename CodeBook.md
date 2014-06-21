@@ -5,7 +5,7 @@ data
 The data are measurements collected from 1) accelerometers, and 2) gyroscopes on Samsung smartphones.  The smartphones were worn by anonymous volunteer subjects who engaged in six different activities at distinct times.  Each record contains pre-processed values derived from the accelerometer and gyroscope measurements from one subject during a distinct activity.  The pre-processing included calculation of means and standard deviations.  There are multiple measurements for each subject for each activity.
 subsetting and transformations
 ---
-The tidy data set was subset to contain only the means and standard deviations of the accelerometer and gyroscope measurements.
+The full data set was subset to reduce its contents to only the means and standard deviations of the accelerometer and gyroscope measurements.  
 The values for each subject during each activity were averaged, and the tidy data set contains only these averages.
 variables
 ---
